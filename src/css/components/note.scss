@@ -1,0 +1,23 @@
+// 建立這個文件來存放便條相關樣式
+// 基本便條樣式
+.note {
+  position: absolute;
+  will-change: transform;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  // ...其他共用樣式
+}
+
+// 便條標題樣式
+.note-header {
+  // ...
+}
+
+// 便條內容樣式
+.note-content {
+  // ...
+}
+
+// 便條工具列樣式
+.tools-container {
+  // ...
+} 

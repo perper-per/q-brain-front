@@ -1,0 +1,300 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+@import './quasar.variables.scss';
+// Header 相關變量 - 調整高度
+$header-height-desktop: 48px;  // 減小高度
+$header-height-tablet: 48px;
+$header-height-mobile: 48px;
+
+// 隱藏全局滾動軸但保持滾動功能
+html,
+body {
+  scroll-behavior: smooth;
+  overflow-y: auto !important; // 確保可以滾動
+  height: auto !important; // 允許內容延伸
+  min-height: 100vh;
+  
+  &::-webkit-scrollbar {
+    display: none !important; // Chrome, Safari, Edge
+  }
+  -ms-overflow-style: none !important;  // IE
+  scrollbar-width: none !important;  // Firefox
+}
+
+// 確保所有容器可以滾動但隱藏原生滾動軸
+.q-layout,
+.q-page-container,
+.q-page,
+.page-container {
+  height: auto !important;
+  min-height: 100vh;
+  overflow-y: auto !important; // 確保可以滾動
+  
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+// Header 基本樣式
+.q-header {
+  position: fixed !important;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.7) !important;
+
+  // 自定義 elevated 效果
+  &.q-header--elevated {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) !important; 
+  }
+  
+  // 確保 header 和 toolbar 高度一致
+  height: $header-height-desktop;
+  .q-toolbar {
+    min-height: $header-height-desktop;
+    height: $header-height-desktop;
+  }
+}
+
+// 調整內容區域的上邊距，確保與 header 高度一致
+.q-page-container {
+  padding-top: $header-height-desktop !important;
+}
+
+// 全局設定
+.q-page {
+  padding-top: 50px !important; // 為 header 預留空間
+}
+
+
+// Header 內部元素樣式
+.q-header {
+  .q-btn {
+    color: #000;
+  }
+  
+  .q-toolbar__title {
+    color: #000;
+  }
+  
+  .header-toolbar {
+    background: transparent;
+  }
+}
+
+:root {
+  --color-background: #fff;
+  --color-text: #{$text-light};
+  --color-primary: #{$primary};
+  --color-primary-dark: #{color.adjust($primary-dark, $lightness: -10%)};
+  --login-bg: var(--color-background);
+  --login-text: var(--color-text);
+  --login-card-bg: rgba(255, 255, 255, 0.7);
+  --login-input-bg: rgba(230, 230, 230, 0.7);
+  background: var(--color-background);
+  color: var(--color-text);
+  --color-primary-rgb: 25, 118, 210; // #1976D2 的 RGB 值
+}
+
+.dark {
+  --color-background: #{$dark-page};
+  --color-text: #{$text-dark};
+  --color-primary: #{$primary-dark};
+  --color-primary-dark: #{color.adjust($primary-dark, $lightness: -10%)};
+  --login-bg: var(--color-background);
+  --login-text: var(--color-text);
+  --login-card-bg: rgba(150, 150, 150, 0.7);
+  --login-input-bg: rgba(50, 50, 50, 0.9);
+  background: var(--color-background);
+  color: var(--color-text);
+  --color-primary-rgb: 21, 101, 192; // #1565c0 的 RGB 值
+  
+  // 添加這些變量以確保 SlideForm 在暗模式下正常顯示
+  --circle-gradient-start: var(--color-primary);
+  --circle-gradient-end: var(--color-primary-dark);
+  --circle-opacity: 0.05;
+}
+
+::view-transition-old(root) {
+  animation-duration: 0.8s;
+  animation-name: bubble-out;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(slide) {
+  animation: slide-to-left 0.5s ease-in-out;
+}
+
+::view-transition-new(slide) {
+  animation: slide-from-right 0.5s ease-in-out;
+}
+
+::view-transition-old(scale) {
+  animation: scale-out 0.4s ease-in-out;
+}
+
+::view-transition-new(scale) {
+  animation: scale-in 0.4s ease-in-out;
+}
+
+.dark::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.dark::view-transition-new(root) {
+  animation-duration: 0.8s;
+  animation-name: bubble-in;
+  mix-blend-mode: normal;
+}
+
+@keyframes bubble-in {
+  from {
+    clip-path: circle(0% at var(--pointerX) var(--pointerY));
+  }
+  to {
+    clip-path: circle(140% at var(--pointerX) var(--pointerY));
+  }
+}
+
+@keyframes bubble-out {
+  from {
+    z-index: 1000;
+    clip-path: circle(100% at var(--pointerX) var(--pointerY));
+  }
+  to {
+    z-index: 1000;
+    clip-path: circle(0% at var(--pointerX) var(--pointerY));
+  }
+}
+
+// 添加一個類來防止全局 hover 效果影響
+.no-hover-scale {
+  &:hover {
+    transform: none !important;
+  }
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(100%); }
+}
+
+@keyframes slide-to-left {
+  to { transform: translateX(-100%); }
+}
+
+
+@keyframes scale-in {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scale-out {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(1.2); opacity: 0; }
+}
+
+::view-transition-old(preface-transition) {
+  animation: slide-to-left 0.5s ease-in-out;
+}
+
+::view-transition-new(preface-transition) {
+  animation: slide-from-right 0.5s ease-in-out;
+}
+
+// 添加刪除確認通知的自定義樣式
+.delete-notification {
+  font-size: 1rem;
+  padding: 12px;
+  
+  .q-notification__message {
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .q-notification__actions {
+    padding-top: 8px;
+    
+    .q-btn {
+      padding: 8px 16px;
+      font-weight: 500;
+      
+      &--flat {
+        opacity: 0.8;
+        
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+// 添加 Locomotive Scroll 相關樣式
+.has-scroll-smooth {
+  overflow: hidden;
+}
+
+.has-scroll-dragging {
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-container] {
+  height: 100vh;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+[data-scroll-direction="horizontal"] [data-scroll-section] {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.c-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 100%;
+  transform-origin: center right;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+
+.c-scrollbar:hover {
+  transform: scaleX(1.45);
+}
+
+.c-scrollbar:hover, .has-scroll-scrolling .c-scrollbar, .has-scroll-dragging .c-scrollbar {
+  opacity: 1;
+}
+
+.c-scrollbar_thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0.5;
+  width: 7px;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: grab;
+}
+
+.has-scroll-dragging .c-scrollbar_thumb {
+  cursor: grabbing;
+}
+
+.dark .c-scrollbar_thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
