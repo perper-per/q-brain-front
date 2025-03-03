@@ -45,12 +45,12 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: './',
       // analyze: true,
 
       env: {
         API_URL: process.env.API_URL || 'http://localhost:4000',
-        OPENAI_API_KEY: process.env.VITE_OPENAI_API_KEY || '',
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
       },
 
       // rawDefine: {}
