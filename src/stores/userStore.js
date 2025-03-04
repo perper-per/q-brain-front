@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import UserRole from '../enums/UserRole.js'
-import { api } from '../boot/axios'
+import { useAxios } from '../composables/axios'
 
 export const useUserStore = defineStore(
   'user',
@@ -16,6 +16,8 @@ export const useUserStore = defineStore(
     const createdAt = ref(null)
     const isLoggedIn = computed(() => token.value !== '')
     const isAdmin = computed(() => role.value === UserRole.ADMIN) // 使用枚舉值
+
+    const { api } = useAxios()
 
     // 監聽狀態變化，自動更新 localStorage
     watch(token, (newToken) => {
