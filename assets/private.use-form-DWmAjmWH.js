@@ -1,1 +1,0 @@
-import{m as n,i as r}from"./index-CvvTYKRz.js";const o={name:String};function s(e){return n(()=>({type:"hidden",name:e.name,value:e.modelValue}))}function i(e={}){return(t,u,a)=>{t[u](r("input",{class:"hidden"+(a||""),...e.value}))}}function c(e){return n(()=>e.name||e.for)}export{i as a,s as b,c,o as u};
