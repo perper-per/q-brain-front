@@ -483,16 +483,20 @@ form.sign-in-form {
 
 .left-panel {
   pointer-events: all;
-  padding: 3rem 17% 2rem 12%;
+  padding: 3rem 25% 2rem 20%;
 }
 
 .right-panel {
   pointer-events: none;
-  padding: 3rem 12% 2rem 17%;
+  padding: 3rem 25% 2rem 17%;
 }
 
 .panel .content {
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.9s ease-in-out;
   transition-delay: 0.6s;
   margin-top: -5vh;

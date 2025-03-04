@@ -6,24 +6,31 @@ export function useLocomotiveScroll() {
   const locomotiveInstance = ref(null)
 
   // 初始化 Locomotive Scroll
-  const initLocomotiveScroll = (options = {}) => {
+  const initLocomotiveScroll = ({ speed = 0.5, smoothness = 0.05, ...otherOptions } = {}) => {
+    // 先銷毀現有實例
+    destroyLocomotiveScroll()
+
     const defaultOptions = {
       el: document.querySelector('[data-scroll-container]'),
-      smooth: true,
-      multiplier: 1,
-      class: 'is-revealed',
-      lerp: 0.1, // 線性插值 - 較小的值讓滾動更平滑
+      smooth: false, // 完全關閉平滑滾動
+      multiplier: speed,
+      class: 'is-inview',
+      lerp: smoothness,
       smartphone: {
         smooth: false,
       },
       tablet: {
-        smooth: true,
+        smooth: false,
         breakpoint: 1024,
       },
+      // 關閉不必要的功能
+      scrollFromAnywhere: false,
+      touchMultiplier: 1,
+      resetNativeScroll: true,
     }
 
     // 合併選項
-    const scrollOptions = { ...defaultOptions, ...options }
+    const scrollOptions = { ...defaultOptions, ...otherOptions }
 
     // 如果找不到容器元素，提前返回
     if (!scrollOptions.el) {
@@ -36,12 +43,7 @@ export function useLocomotiveScroll() {
       locomotiveInstance.value = new LocomotiveScroll(scrollOptions)
       console.log('Locomotive Scroll 已初始化:', locomotiveInstance.value)
 
-      // 自動更新滾動項目
-      window.addEventListener('load', () => {
-        console.log('重新計算 Locomotive Scroll')
-        locomotiveInstance.value?.update()
-      })
-
+      // 只添加窗口大小變化事件
       window.addEventListener('resize', () => {
         locomotiveInstance.value?.update()
       })

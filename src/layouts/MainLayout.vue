@@ -248,7 +248,7 @@
     </q-drawer>
 
     <!-- 頁面容器 -->
-    <q-page-container data-scroll-container>
+    <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -268,7 +268,7 @@ const router = useRouter()
 const { t, locale } = useI18n()
 const user = useUserStore()
 const $q = useQuasar()
-const { initLocomotiveScroll, destroyLocomotiveScroll } = useLocomotiveScroll()
+const { destroyLocomotiveScroll } = useLocomotiveScroll()
 
 let locomotiveInstance = null
 
@@ -342,12 +342,6 @@ router.afterEach(() => {
 })
 
 onMounted(() => {
-  // 初始化 Locomotive Scroll
-  locomotiveInstance = initLocomotiveScroll()
-
-  // 將實例暴露到全局以便於調試
-  window.locomotiveScroll = locomotiveInstance
-
   console.log('元件掛載，目前螢幕類型:', $q.screen.name)
   console.log('是否為行動裝置:', $q.screen.lt.md)
 
@@ -396,10 +390,10 @@ const toggleRightDrawer = () => {
 </script>
 
 <style lang="scss" scoped>
-
 body .q-layout .q-page-container {
   padding-top: 0px !important;
   min-height: calc(100vh - 50px);
+  overflow: hidden !important; // 確保沒有原生滾動
 }
 
 .fixed-header {

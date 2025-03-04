@@ -1,7 +1,7 @@
 export default {
   nav: {
-    title: '腦袋爆炸網站',
-    shortTitle: '腦梳理',
+    title: 'knotty brained',
+    shortTitle: '♥ 舒結 ♥ 拉拉 ♥',
     menu: '選單',
     language: '語言',
     theme: '主題',

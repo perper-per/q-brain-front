@@ -1,7 +1,7 @@
 export default {
   nav: {
-    title: 'The Website for the Foggiest Brains',
-    shortTitle: 'for the Foggiest Brains',
+    title: 'knotty brained',
+    shortTitle: 'knotty brained',
     menu: 'Menu',
     language: 'Language',
     theme: 'Theme',
@@ -214,7 +214,7 @@ export default {
     sections: {
       brain: {
         question: 'Is your brain exploding?',
-        status: 'What\'s going on with your brain?',
+        status: "What's going on with your brain?",
         login: 'Login to record your brain',
       },
       guide: {

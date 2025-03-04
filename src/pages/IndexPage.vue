@@ -1,6 +1,5 @@
 <template>
   <q-page class="page-container" data-scroll-container>
-    <!-- <HalftoneWaves class="background-waves" /> -->
     <!-- Loading 遮罩 -->
     <div v-if="isLoading" class="loading-overlay">
       <h1 style="font-family: 'Dela Gothic One', cursive;">>>>>>>>>>>>>loading>>>>>>>>>>>>>></h1>
@@ -84,6 +83,16 @@
 
           <!-- 第二屏：使用說明 -->
           <div v-else-if="section.id === 'guide'" class="guide-content">
+            <!-- 視差測試元素 -->
+            <div style="height: 200px; width: 100%; position: relative; overflow: hidden; margin-bottom: 30px;">
+              <div data-scroll data-scroll-speed="2" style="background: red; height: 100px; width: 100px; position: absolute; left: 20%; top: 50px;">
+                快速上移元素
+              </div>
+              <div data-scroll data-scroll-speed="-2" style="background: blue; height: 100px; width: 100px; position: absolute; right: 20%; top: 50px; color: white;">
+                快速下移元素
+              </div>
+            </div>
+
             <h2>{{ $t('index.sections.guide.title') }}</h2>
 
             <!-- 功能卡片 -->
@@ -161,6 +170,17 @@
         </div>
       </section>
     </div>
+
+    <!-- 添加一個切換按鈕，幫助調試 -->
+    <div class="scroll-toggle-button">
+      <q-btn
+        color="primary"
+        :label="useLocomotiveEffect ? '使用原生滾動' : '使用視差效果'"
+        @click="toggleScrollMode"
+        class="fixed-bottom-right"
+        style="margin: 20px; z-index: 9999;"
+      />
+    </div>
   </q-page>
   <q-btn
     v-if="$route.path !== '/' && !$q.screen.lt.md"
@@ -188,7 +208,7 @@ import { useLocomotiveScroll } from 'src/composables/useLocomotiveScroll'
 const $q = useQuasar()
 const router = useRouter()
 const { t } = useI18n()
-const { initLocomotiveScroll, update } = useLocomotiveScroll()
+const { initLocomotiveScroll, destroyLocomotiveScroll } = useLocomotiveScroll()
 const isLoading = ref(true)
 
 // 定義響應式尺寸
@@ -235,6 +255,7 @@ const checkAllResourcesLoaded = () => {
 }
 
 let locomotiveInstance = null
+const useLocomotiveEffect = ref(false) // 默認不使用 Locomotive Scroll
 
 // 解決 "isScrolling" 未定義警告
 const isScrolling = ref(false)
@@ -242,6 +263,31 @@ const isScrolling = ref(false)
 // 控制顯示變色腦
 const showColorBrain = ref(false)
 
+// 切換滾動模式
+const toggleScrollMode = () => {
+  console.log('嘗試切換滾動模式', useLocomotiveEffect.value)
+  useLocomotiveEffect.value = !useLocomotiveEffect.value
+  console.log('切換後狀態', useLocomotiveEffect.value)
+
+  if (useLocomotiveEffect.value) {
+    // 啟用 Locomotive
+    nextTick(() => {
+      setTimeout(() => {
+        initLocomotiveScroll({
+          el: document.querySelector('.page-container[data-scroll-container]'),
+          smooth: false,
+          class: 'is-inview'
+        })
+      }, 200)
+    })
+  } else {
+    // 禁用 Locomotive
+    destroyLocomotiveScroll()
+    // 恢復原生滾動
+    document.documentElement.classList.remove('has-scroll-smooth')
+    document.body.classList.remove('has-scroll-smooth')
+  }
+}
 
 onMounted(async () => {
   // 如果圖片已經在快取中，可能需要手動觸發加載完成
@@ -249,77 +295,19 @@ onMounted(async () => {
     handleImageLoad()
   }
 
-  // 等待 DOM 更新後初始化 Locomotive Scroll
-  await nextTick()
+  // 不自動初始化 Locomotive Scroll
+  // 取消這部分的自動初始化代碼
 
-  // 初始化 Locomotive Scroll 到頁面級別，使用更適合的配置
-  locomotiveInstance = initLocomotiveScroll({
-    el: document.querySelector('.page-container[data-scroll-container]'),
-    smooth: true,
-    smoothMobile: false,
-    lerp: 0.1,
-    scrollFromAnywhere: true, // 允許從任何位置開始滾動
-    getDirection: true, // 取得滾動方向
-    getSpeed: true, // 取得滾動速度
-    reloadOnContextChange: true, // 上下文變化時重新加載
-    resetNativeScroll: true // 重置原生滾動行為
-  })
-
-  if (locomotiveInstance) {
-    console.log('Locomotive Scroll 已初始化:', locomotiveInstance)
-
-    // 監聽滾動事件更新當前區塊
-    locomotiveInstance.on('scroll', (obj) => {
-      // 檢查哪個區塊在視窗中央
-      const sectionElements = document.querySelectorAll('.section')
-      const viewport = {
-        top: obj.scroll.y,
-        bottom: obj.scroll.y + window.innerHeight,
-        middle: obj.scroll.y + (window.innerHeight / 2)
-      }
-
-      sectionElements.forEach((section, index) => {
-        const rect = section.getBoundingClientRect()
-        const top = obj.scroll.y + rect.top
-        const bottom = top + rect.height
-
-        // 如果視窗中間點在區塊內部，設置為當前區塊
-        if (viewport.middle >= top && viewport.middle <= bottom) {
-          currentSection.value = index
-        }
-      })
+  // 測試按鈕點擊
+  const testBtn = document.querySelector('.toggle-btn')
+  if (testBtn) {
+    testBtn.addEventListener('click', () => {
+      console.log('按鈕點擊事件觸發成功!')
     })
-
-    // 在初始化後觸發一次更新
-    setTimeout(() => {
-      update()
-      console.log('Locomotive Scroll 已更新')
-    }, 500)
   }
 
-  // 創建一個新的 Intersection Observer
-  const observer = new IntersectionObserver(
-    (entries) => {
-      // 確保 entries 是數組
-      if (!Array.isArray(entries)) return
-
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible')
-        }
-      }
-    },
-    {
-      threshold: 0.1,
-      rootMargin: '0px'
-    }
-  )
-
-  // 獲取所有需要觀察的元素
-  const elements = document.querySelectorAll('.section-content')
-  for (const element of elements) {
-    observer.observe(element)
-  }
+  // 確保 body 和其他容器不會阻擋點擊事件
+  document.body.style.pointerEvents = 'auto'
 })
 
 const goToNoteBoard = () => router.push('/site/notes')
@@ -406,6 +394,7 @@ onBeforeUnmount(() => {
   // 清理 Locomotive Scroll
   if (locomotiveInstance) {
     locomotiveInstance.destroy()
+    locomotiveInstance = null
   }
 })
 </script>
@@ -415,7 +404,7 @@ onBeforeUnmount(() => {
 :global(html),
 :global(body) {
   scroll-behavior: smooth;
-  overflow-y: auto !important;
+  overflow: hidden !important;
   min-height: 100vh;
   height: auto !important;
 
@@ -470,7 +459,7 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   height: auto !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   min-height: 100vh;
   overflow-x: hidden;
   display: block !important;
@@ -863,7 +852,7 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   height: auto;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 [data-scroll-section] {
