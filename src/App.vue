@@ -7,5 +7,4 @@
 </template>
 
 <script setup>
-// 組件邏輯
 </script>

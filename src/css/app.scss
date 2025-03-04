@@ -1,15 +1,18 @@
 @use "sass:color";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 @import './quasar.variables.scss';
 // Header 相關變量 - 調整高度
 $header-height-desktop: 48px;  // 減小高度
 $header-height-tablet: 48px;
 $header-height-mobile: 48px;
 
+// 設定字體變數
+$font-body: 'Noto Sans TC', sans-serif;
+$font-title: 'Nova Round', cursive;
+
 // 隱藏全局滾動軸但保持滾動功能
 html,
 body {
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: $font-body;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
@@ -20,6 +23,31 @@ body {
   }
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+}
+
+// 設定特定元素使用 Nova Round 字體 - 增強選擇器和優先級
+.title-font, 
+.huge-title, 
+.section-number,
+.q-toolbar__title,
+h1.special-title,
+h2.special-title,
+h3.special-title {
+  font-family: "Nova Round", cursive !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 特別針對網站標題的強制樣式
+h1.huge-title {
+  font-family: "Nova Round", cursive !important;
+  font-weight: normal !important; /* 有些瀏覽器可能需要正確的字重 */
+}
+
+/* 全局強制樣式 - 請放在樣式表最後 */
+[class*="title-font"],
+[class*="huge-title"] {
+  font-family: "Nova Round", cursive !important;
 }
 
 // 確保所有容器可以滾動
@@ -300,20 +328,12 @@ body {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-// 關鍵添加: 正確的 Locomotive Scroll 樣式
-.is-inview {
-  transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1),
-              transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-
-// 視差元素基本樣式
-[data-scroll] {
-  will-change: transform;
-  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-
-// 視差容器
-[data-scroll-container] {
-  overflow: auto !important;
-  height: auto !important;
+// Nova Round 特定樣式
+.nova-round-font, 
+.huge-title,
+.hero-text h1,
+.hero-text h1 span {
+  font-family: 'Nova Round', cursive !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

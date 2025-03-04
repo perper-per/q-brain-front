@@ -1,13 +1,27 @@
 <template>
-  <q-page class="page-container" data-scroll-container>
-    <!-- Loading 遮罩 -->
-    <div v-if="isLoading" class="loading-overlay">
-      <h1 style="font-family: 'Dela Gothic One', cursive;">>>>>>>>>>>>>loading>>>>>>>>>>>>>></h1>
+  <div data-scroll-container >
+  <!-- <div data-scroll-container class="gradient-bg"> -->
+    <!-- Loading 遮罩 - 使用 v-show 而非 v-if 確保元素存在 -->
+    <div v-show="isLoading" class="loading-overlay">
+      <div class="loading-text-container">
+        <div
+          v-for="(_, index) in 20"
+          :key="index"
+          class="loading-text-line"
+          :style="{
+            marginLeft: index * 50 + 'px',
+            left: '-600px',
+            position: 'relative'
+          }"
+        >
+          <span style="font-family: 'Dela Gothic One', cursive;">>>>>>>>>>loading>>>>>>>>>>>>>></span>
+        </div>
+      </div>
       <q-spinner-dots color="primary" size="40px" />
     </div>
 
-    <!-- 垂直導航列 -->
-    <div v-show="!isLoading" class="vertical-nav">
+    <!-- 導航列 -->
+    <!-- <div class="vertical-nav">
       <div class="nav-links">
         <q-btn
           v-for="section in sections"
@@ -17,172 +31,219 @@
           dense
           :label="section.title"
           @click="scrollToSection(section.id)"
-          :class="{ 'active-nav': currentSection === sections.findIndex(s => s.id === section.id) }"
-          :disable="isScrolling"
+          class="nav-btn"
         />
       </div>
+    </div> -->
+
+    <!-- 第一個 section - 英雄區塊 -->
+    <section data-scroll-section class="section hero-section" id="hero">
+      <div class="section-inner hero-content">
+        <!-- 漂浮的大腦 - 右上角 -->
+        <div class="floating-brain-wrapper" data-scroll data-scroll-speed="2">
+          <BrainWithEyes
+            :brain-size="brainSizes[currentSize]"
+            :screen-size="currentSize"
+            :show-eyes="true"
+            @brain-click="redirectToLogin"
+          />
+        </div>
+
+          <div class="brain-status-question" data-scroll-speed="-6" >
+            <svg width="449" height="157" viewBox="0 0 549 157" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g transform="rotate(30 275 78.5)">
+                <path id="path1" d="M9.55568 33.819C105.754 212.873 467.187 -29.5023 542.273 101.507" stroke="transparent" stroke-width="5"/>
+
+                <text fill="blue" font-size="50" font-family="'Dela Gothic One', cursive" textLength="500" lengthAdjust="spacing">
+                  <textPath href="#path1">
+                    腦的狀態如何？
+                  </textPath>
+                </text>
+              </g>
+            </svg>
+          </div>
+
+        <div class="hero-text" data-scroll data-scroll-speed="2">
+          <h1 class="c-header_title" data-scroll>
+            <span class="c-header_title_line">
+              <span
+                data-scroll
+                data-scroll-speed="4"
+                data-scroll-position="top"
+                class="title-word knotty-word"
+              >knotty</span>
+            </span>
+            <span class="c-header_title_line">
+              <span
+                data-scroll
+                data-scroll-speed="2"
+                data-scroll-position="top"
+                class="title-word brained-word"
+              >brained</span>
+            </span>
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- 波浪背景 - 放在第一和第二區塊之間 -->
+    <div class="wave-background" data-scroll data-scroll-speed="3">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" class="wave-svg">
+        <defs>
+          <linearGradient gradientTransform="rotate(270)" x1="50%" y1="0%" x2="50%" y2="100%" id="sssquiggly-grad">
+            <stop stop-color="hsl(1.4, 100%, 67%)" offset="0%"></stop>
+            <stop stop-color="hsl(167, 52%, 78%)" offset="100%"></stop>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#sssquiggly-grad)" fill="none" stroke-linecap="round" stroke-width="2">
+          <path d="M10,10C21.8,11.46,41,22,66.67,17C92.36,12,105.56,-17.13,133.33,-14C161.11,-10.87,172.22,34.71,200,32C227.78,29.29,238.89,-30.54,266.67,-27C294.44,-23.46,305.56,46.29,333.33,49C361.11,51.71,372.22,-12.13,400,-14C427.78,-15.88,438.89,37.29,466.67,40C494.44,42.71,505.56,-4.54,533.33,-1C561.11,2.54,572.22,56.79,600,57C627.78,57.21,638.89,0.42,666.67,0C694.44,-0.42,707.64,52.92,733.33,55C759.03,57.08,778.19,19.38,790,10" transform="translate(0, 52)"></path>
+          <path d="M10,10C21.8,11.46,41,22,66.67,17C92.36,12,105.56,-17.13,133.33,-14C161.11,-10.87,172.22,34.71,200,32C227.78,29.29,238.89,-30.54,266.67,-27C294.44,-23.46,305.56,46.29,333.33,49C361.11,51.71,372.22,-12.13,400,-14C427.78,-15.88,438.89,37.29,466.67,40C494.44,42.71,505.56,-4.54,533.33,-1C561.11,2.54,572.22,56.79,600,57C627.78,57.21,638.89,0.42,666.67,0C694.44,-0.42,707.64,52.92,733.33,55C759.03,57.08,778.19,19.38,790,10" transform="translate(0, 95)"></path>
+          <path d="M10,10C21.8,11.46,41,22,66.67,17C92.36,12,105.56,-17.13,133.33,-14C161.11,-10.87,172.22,34.71,200,32C227.78,29.29,238.89,-30.54,266.67,-27C294.44,-23.46,305.56,46.29,333.33,49C361.11,51.71,372.22,-12.13,400,-14C427.78,-15.88,438.89,37.29,466.67,40C494.44,42.71,505.56,-4.54,533.33,-1C561.11,2.54,572.22,56.79,600,57C627.78,57.21,638.89,0.42,666.67,0C694.44,-0.42,707.64,52.92,733.33,55C759.03,57.08,778.19,19.38,790,10" transform="translate(0, 140)"></path>
+        </g>
+      </svg>
     </div>
 
-    <!-- 主要內容 -->
-    <div class="content-wrapper" :class="{ 'content-loaded': !isLoading }" data-scroll-section>
-      <!-- 各個區塊 -->
-      <section v-for="section in sections" :key="section.id"
-              :id="section.id"
-              class="section"
-              :class="section.id + '-section'">
-        <div class="section-content" data-scroll>
-          <!-- 第一屏：大腦部分 -->
-          <div v-if="section.id === 'brain'" class="brain-wrapper">
-            <div class="eyes-container">
-              <Eye
-                ref="leftEyeRef"
-                class="left-eye"
-                :size="eyeSizes[currentSize]"
-                :screen-size="currentSize"
-              />
-              <Eye
-                ref="rightEyeRef"
-                class="right-eye"
-                :size="eyeSizes[currentSize]"
-                :screen-size="currentSize"
-              />
-            </div>
 
-            <div class="brain-container"
-                @mouseover="showColorBrain = true"
-                @mouseleave="showColorBrain = false"
-                @click="goToLogin">
-
-              <!-- 大標題文字 (僅在顯示變色腦時顯示) -->
-              <div v-if="showColorBrain" class="brain-title">
-                <h3 class="brain-main-title, Dela-gothic-one-stable">開始記錄腦</h3>
+    <!-- 第二個 section - 功能介紹區塊 -->
+<section data-scroll-section class="section content-section" id="content">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number" data-scroll data-scroll-speed="1">01</span>
+      <h2 class="section-title" data-scroll data-scroll-speed="2">
+        <span class="primary-color">解結工具</span>
+      </h2>
+    </div>
+    <div class="function-container" data-scroll data-scroll-speed="1">
+      <!-- 功能球容器 -->
+      <div class="function-balls-container">
+        <!-- 第一個球 - 呼吸 (最大) -->
+        <div class="function-ball-wrapper" data-scroll data-scroll-speed="1.2">
+          <div class="function-ball ball-1 ball-large" @click="goToBreathePage">
+            <div class="ball-content">
+              <div class="ball-front">
+                <div class="problem-title">太焦慮!!</div>
+                <div class="problem-desc">腦袋緊繃、呼吸急促</div>
               </div>
-
-              <!-- 變色版腦 (條件渲染) -->
-              <img
-                v-if="showColorBrain"
-                src="@/assets/brain_rgb_gra.png"
-                class="brain-img color-brain"
-                :style="{ width: `${brainSizes[currentSize]}px` }"
-              >
-
-              <!-- 原始腦圖片 -->
-              <img
-                src="@/assets/brain_rgb_onlybrain.png"
-                class="brain-img original-brain"
-                :style="{ width: `${brainSizes[currentSize]}px`, opacity: showColorBrain ? 0 : 1 }"
-                @load="handleImageLoad"
-              >
-            </div>
-
-            <!-- 添加腦下方的大字標題 -->
-            <div class="brain-status-title">
-              <p class="Dela-gothic-one-text">&nbsp;腦有什麼狀況？</p>
-            </div>
-          </div>
-
-          <!-- 第二屏：使用說明 -->
-          <div v-else-if="section.id === 'guide'" class="guide-content">
-            <!-- 視差測試元素 -->
-            <div style="height: 200px; width: 100%; position: relative; overflow: hidden; margin-bottom: 30px;">
-              <div data-scroll data-scroll-speed="2" style="background: red; height: 100px; width: 100px; position: absolute; left: 20%; top: 50px;">
-                快速上移元素
-              </div>
-              <div data-scroll data-scroll-speed="-2" style="background: blue; height: 100px; width: 100px; position: absolute; right: 20%; top: 50px; color: white;">
-                快速下移元素
-              </div>
-            </div>
-
-            <h2>{{ $t('index.sections.guide.title') }}</h2>
-
-            <!-- 功能卡片 -->
-            <div class="function-cards-container">
-              <q-card class="function-card" @click="goToBreathePage">
-                <q-card-section>
-                  <div class="text-h6">{{ $t('index.sections.guide.cards.breathe.title') }}</div>
-                  <div class="text-subtitle2">{{ $t('index.sections.guide.cards.breathe.description') }}</div>
-                </q-card-section>
-              </q-card>
-
-              <q-card class="function-card" @click="goToTodoPage">
-                <q-card-section>
-                  <div class="text-h6">organize</div>
-                  <div class="text-subtitle2">條理化你的任務</div>
-                </q-card-section>
-              </q-card>
-
-              <q-card class="function-card" @click="goToNoteBoard">
-                <q-card-section>
-                  <div class="text-h6">BrainStorm</div>
-                  <div class="text-subtitle2">記錄你的靈感</div>
-                </q-card-section>
-              </q-card>
-            </div>
-
-            <div class="guide-cards">
-              <q-card v-for="(guide, index) in guides" :key="index" class="guide-card">
-                <q-card-section>
-                  <div class="text-h6">{{ guide.title }}</div>
-                  <div class="text-subtitle2">{{ guide.description }}</div>
-                </q-card-section>
-              </q-card>
-            </div>
-          </div>
-
-          <!-- 第三屏：最新公告 -->
-          <div v-else-if="section.id === 'news'" class="news-content">
-            <h2>最新公告</h2>
-            <BulletinBoard class="expanded-bulletin" />
-          </div>
-
-          <!-- 第四屏：團隊介紹 -->
-          <div v-else-if="section.id === 'team'" class="team-content">
-            <h2>製作的腦</h2>
-            <div class="team-cards">
-              <q-card v-for="(member, index) in teamMembers" :key="index" class="team-card">
-                <q-card-section>
-                  <div class="text-h6">{{ member.name }}</div>
-                  <div class="text-subtitle2">{{ member.role }}</div>
-                  <div class="text-body2">{{ member.description }}</div>
-                </q-card-section>
-              </q-card>
-            </div>
-          </div>
-
-          <!-- 第五屏：聯絡資訊 -->
-          <div v-else-if="section.id === 'contact'" class="contact-content">
-            <h2>聯絡腦</h2>
-            <div class="contact-info">
-              <div class="contact-item">
-                <q-icon name="email" />
-                <span>example@email.com</span>
-              </div>
-              <div class="contact-item">
-                <q-icon name="phone" />
-                <span>+886 123456789</span>
-              </div>
-              <div class="contact-item">
-                <q-icon name="location_on" />
-                <span>台北市信義區信義路五段7號</span>
+              <div class="ball-back">
+                <div class="ball-title">呼吸練習</div>
+                <div class="ball-desc">{{ $t('index.sections.guide.cards.breathe.description') }}</div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </div>
 
-    <!-- 添加一個切換按鈕，幫助調試 -->
-    <div class="scroll-toggle-button">
-      <q-btn
-        color="primary"
-        :label="useLocomotiveEffect ? '使用原生滾動' : '使用視差效果'"
-        @click="toggleScrollMode"
-        class="fixed-bottom-right"
-        style="margin: 20px; z-index: 9999;"
-      />
+        <!-- 第二個球 - 待辦事項 (中等) -->
+        <div class="function-ball-wrapper" data-scroll data-scroll-speed="1.8">
+          <div class="function-ball ball-2 ball-medium" @click="goToTodoPage">
+            <div class="ball-content">
+              <div class="ball-front">
+                <div class="problem-title">要從何開始</div>
+                <div class="problem-desc">事情太多無法理清</div>
+              </div>
+              <div class="ball-back">
+                <div class="ball-title">待辦事項</div>
+                <div class="ball-desc">條理化你的任務</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第三個球 - 靈感板 (中等) -->
+        <div class="function-ball-wrapper" data-scroll data-scroll-speed="2.4">
+          <div class="function-ball ball-3 ball-medium" @click="goToNoteBoard">
+            <div class="ball-content">
+              <div class="ball-front">
+                <div class="problem-title">胡思亂想</div>
+                <div class="problem-desc">需要記錄下來</div>
+              </div>
+              <div class="ball-back">
+                <div class="ball-title">便利貼板</div>
+                <div class="ball-desc">記錄你的靈感</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </q-page>
-  <q-btn
+  </div>
+</section>
+
+    <!-- 第三個 section -->
+    <section data-scroll-section class="section news-section" id="news">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-number" data-scroll data-scroll-speed="1">02</span>
+          <h2 class="section-title primary-color" data-scroll data-scroll-speed="2">
+            最新公告
+          </h2>
+        </div>
+        <div class="section-content" data-scroll data-scroll-speed="1">
+          <BulletinBoard class="expanded-bulletin" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 第四個 section -->
+    <section data-scroll-section class="section team-section" id="team">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-number" data-scroll data-scroll-speed="1">03</span>
+          <h2 class="section-title primary-color" data-scroll data-scroll-speed="2">
+            製作的腦
+          </h2>
+        </div>
+        <div class="team-grid" data-scroll data-scroll-speed="1">
+          <div
+            v-for="(member, index) in teamMembers"
+            :key="index"
+            class="team-member"
+            data-scroll
+            data-scroll-speed="1"
+          >
+            <h3 class="member-name">{{ member.name }}</h3>
+            <span class="member-role">{{ member.role }}</span>
+            <p class="member-desc">{{ member.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第五個 section -->
+    <section data-scroll-section class="section content-section" id="content">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="section-number" data-scroll data-scroll-speed="1">04</span>
+          <h2 class="section-title" data-scroll data-scroll-speed="2">
+            腦訊通知
+          </h2>
+        </div>
+        <div class="sign-in" data-scroll data-scroll-speed="3">
+          <p class="content-desc" data-scroll data-scroll-speed="1">
+            Lorem ipsum dolor
+            <span class="grey">sit epicurus in animis nostres <br>
+            inesse notionem ut voluptates</span>
+          </p>
+          <div class="form" data-scroll data-scroll-speed="4">
+            <input type="email" placeholder="Your email...">
+            <button>訂閱更新</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 底部的大腦組件 - 放在所有 section 之後，但在容器結束前 -->
+    <div class="footer-brain-container" data-scroll-section>
+      <div class="footer-brain-wrapper" data-scroll data-scroll-speed="1">
+        <BrainWithEyes
+          :brain-size="brainSizes[currentSize]"
+          :screen-size="currentSize"
+          :show-eyes="true"
+          @brain-click="redirectToLogin"
+        />
+      </div>
+    </div>
+  </div>
+    <q-btn
     v-if="$route.path !== '/' && !$q.screen.lt.md"
     class="return-to-preface-btn"
     unelevated
@@ -196,33 +257,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, onBeforeUnmount, nextTick } from 'vue'
-import { useQuasar } from 'quasar'
+import { onMounted, onBeforeMount, computed, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-// import PeelSticker from 'components/PeelSticker.vue'
-import Eye from 'components/EyeMove.vue'
-import BulletinBoard from 'components/BulletinBoard.vue'
+import { useQuasar } from 'quasar'
 import { useLocomotiveScroll } from 'src/composables/useLocomotiveScroll'
+import BulletinBoard from 'components/BulletinBoard.vue'
+import BrainWithEyes from 'components/BrainWithEyes.vue'
+
+// 確保 loading 狀態默認為 true
+const isLoading = ref(true)
 
 const $q = useQuasar()
 const router = useRouter()
-const { t } = useI18n()
-const { initLocomotiveScroll, destroyLocomotiveScroll } = useLocomotiveScroll()
-const isLoading = ref(true)
+const { initLocomotiveScroll, update, locomotiveInstance } = useLocomotiveScroll()
 
-// 定義響應式尺寸
+// 不同屏幕尺寸的腦大小
 const brainSizes = {
   lg: 500,
   md: 400,
   sm: 300
 }
 
-const eyeSizes = {
-  lg: 60,
-  md: 50,
-  sm: 40
-}
 
 // 計算當前尺寸
 const currentSize = computed(() => {
@@ -231,293 +286,121 @@ const currentSize = computed(() => {
   return 'lg'
 })
 
-// 定義需要加載的資源
-const resourcesToLoad = {
-  brainImage: false,
-  // 可以添加其他需要加載的資源
-}
-// 處理圖片加載
-const handleImageLoad = () => {
-  resourcesToLoad.brainImage = true
-  checkAllResourcesLoaded()
-}
-
-// 檢查所有資源是否加載完成
-const checkAllResourcesLoaded = () => {
-  const allLoaded = Object.values(resourcesToLoad).every(loaded => loaded)
-  if (allLoaded) {
-    // 添加一個小延遲，讓 loading 動畫更流暢
-    setTimeout(() => {
-      isLoading.value = false
-
-    }, 500)
+// 團隊成員數據
+const teamMembers = [
+  {
+    name: '腦人',
+    role: '產品經理',
+    description: '負責產品規劃與管理，制定產品策略與發展方向。'
+  },
+  {
+    name: '腦人',
+    role: '技術總監',
+    description: '負責技術架構與開發，確保系統穩定性與擴展性。'
+  },
+  {
+    name: '腦人',
+    role: '設計師',
+    description: '負責使用者介面設計，創造流暢直觀的使用體驗。'
   }
-}
+]
 
-let locomotiveInstance = null
-const useLocomotiveEffect = ref(false) // 默認不使用 Locomotive Scroll
 
-// 解決 "isScrolling" 未定義警告
-const isScrolling = ref(false)
-
-// 控制顯示變色腦
-const showColorBrain = ref(false)
-
-// 切換滾動模式
-const toggleScrollMode = () => {
-  console.log('嘗試切換滾動模式', useLocomotiveEffect.value)
-  useLocomotiveEffect.value = !useLocomotiveEffect.value
-  console.log('切換後狀態', useLocomotiveEffect.value)
-
-  if (useLocomotiveEffect.value) {
-    // 啟用 Locomotive
-    nextTick(() => {
-      setTimeout(() => {
-        initLocomotiveScroll({
-          el: document.querySelector('.page-container[data-scroll-container]'),
-          smooth: false,
-          class: 'is-inview'
-        })
-      }, 200)
-    })
-  } else {
-    // 禁用 Locomotive
-    destroyLocomotiveScroll()
-    // 恢復原生滾動
-    document.documentElement.classList.remove('has-scroll-smooth')
-    document.body.classList.remove('has-scroll-smooth')
-  }
-}
-
-onMounted(async () => {
-  // 如果圖片已經在快取中，可能需要手動觸發加載完成
-  if (document.querySelector('.brain-img')?.complete) {
-    handleImageLoad()
-  }
-
-  // 不自動初始化 Locomotive Scroll
-  // 取消這部分的自動初始化代碼
-
-  // 測試按鈕點擊
-  const testBtn = document.querySelector('.toggle-btn')
-  if (testBtn) {
-    testBtn.addEventListener('click', () => {
-      console.log('按鈕點擊事件觸發成功!')
-    })
-  }
-
-  // 確保 body 和其他容器不會阻擋點擊事件
-  document.body.style.pointerEvents = 'auto'
-})
-
+// 點擊大腦重定向到登錄頁面
+const redirectToLogin = () => router.push('/site/login')
 const goToNoteBoard = () => router.push('/site/notes')
 const goToPreface = () => router.push('/')
 const goToBreathePage = () => router.push('/site/breathe')
 const goToTodoPage = () => router.push('/site/todo')
 
-const goToLogin = () => router.push('/site/login')
-
-// 定義sections
-const sections = computed(() => [
-  { id: 'brain', title: t('index.nav.brain') },
-  { id: 'guide', title: t('index.nav.guide') },
-  { id: 'news', title: t('index.nav.news') },
-  { id: 'team', title: t('index.nav.team') },
-  { id: 'contact', title: t('index.nav.contact') }
-])
-
-const currentSection = ref(0)
-
-// 修改 scrollToSection 函數，控制 isScrolling 狀態
-const scrollToSection = (sectionId) => {
-  if (isScrolling.value) return // 如果正在滾動，防止重複觸發
-
-  isScrolling.value = true
-
-  // 找到目標區塊
-  const targetSection = document.getElementById(sectionId)
-  if (targetSection) {
-    // 使用 locomotive-scroll 滾動到指定區塊
-    if (locomotiveInstance) {
-      locomotiveInstance.scrollTo(targetSection, {
-        duration: 1000,
-        offset: 0,
-        callback: () => {
-          // 滾動完成後重置狀態
-          setTimeout(() => {
-            isScrolling.value = false
-          }, 100)
-        }
-      })
-    }
-  } else {
-    isScrolling.value = false // 如果找不到目標，重置狀態
-  }
-}
-
-// 使用說明數據
-const guides = [
-  {
-    title: '開始使用',
-    description: '如何開始使用我們的服務'
-  },
-  {
-    title: '功能介紹',
-    description: '了解我們提供的主要功能'
-  },
-  {
-    title: '常見問題',
-    description: '解答常見的使用問題'
-  }
-]
-
-// 團隊成員數據
-const teamMembers = [
-  {
-    name: '我',
-    role: '產品經理',
-    description: '負責產品規劃與管理'
-  },
-  {
-    name: '我',
-    role: '技術總監',
-    description: '負責技術架構與開發'
-  },
-  {
-    name: '我',
-    role: '設計師',
-    description: '負責使用者介面設計'
-  }
-]
-
-onBeforeUnmount(() => {
-  // 清理 Locomotive Scroll
-  if (locomotiveInstance) {
-    locomotiveInstance.destroy()
-    locomotiveInstance = null
-  }
+// 在組件掛載前確保 loading 狀態為 true
+onBeforeMount(() => {
+  console.log('啟動 Loading 畫面')
+  isLoading.value = true
 })
+
+// 初始化視差滾動
+onMounted(() => {
+  console.log('Loading 狀態:', isLoading.value)
+
+  setTimeout(() => {
+    console.log('Loading 時間到，關閉 Loading 畫面')
+    isLoading.value = false
+
+    setTimeout(() => {
+      try {
+        initLocomotiveScroll({
+          smooth: true,
+          multiplier: 1,
+          lerp: 0.1,
+          smartphone: {
+            smooth: true
+          },
+          tablet: {
+            smooth: true,
+            breakpoint: 1024
+          }
+        })
+        console.log('Locomotive Scroll 初始化成功')
+
+        document.documentElement.classList.add('is-ready')
+      } catch (error) {
+        console.error('初始化 Locomotive Scroll 發生錯誤:', error)
+      }
+    }, 100)
+
+    update()
+  }, 2000)
+
+  window.addEventListener('resize', () => {
+    try {
+      update()
+    } catch (error) {
+      console.error('更新 Locomotive Scroll 時發生錯誤:', error)
+    }
+  })
+
+  // 確保頁面加載後刷新一次 Locomotive Scroll
+  nextTick(() => {
+    // 短暫延遲確保 DOM 完全渲染
+    setTimeout(() => {
+      if (locomotiveInstance.value) {
+        locomotiveInstance.value.update();
+
+        // 確保所有區域都可見
+        for (const section of document.querySelectorAll('.section')) {
+          // 強制重新計算區域高度和位置
+          section.style.display = 'block';
+          section.style.opacity = '1';
+        }
+
+        // 再次更新滾動引擎
+        locomotiveInstance.value.update();
+      }
+    }, 500);
+  });
+})
+
+// 定義部分區塊數據供模板使用
+// const sections = [
+//   { id: 'hero', title: '首頁' },
+//   { id: 'content', title: '內容' },
+//   { id: 'news', title: '公告' },
+//   { id: 'team', title: '團隊' },
+//   { id: 'contact', title: '聯絡' }
+// ]
+
+// 處理導航點擊
+// const scrollToSection = (sectionId) => {
+//   scrollTo(`#${sectionId}`, {
+//     offset: 0,
+//     duration: 1000
+//   })
+// }
 </script>
 
 <style lang="scss">
-// 全局滾動軸隱藏
-:global(html),
-:global(body) {
-  scroll-behavior: smooth;
-  overflow: hidden !important;
-  min-height: 100vh;
-  height: auto !important;
-
-  &::-webkit-scrollbar {
-    display: none !important; // Chrome, Safari, Edge
-  }
-  -ms-overflow-style: none !important;  // IE
-  scrollbar-width: none !important;  // Firefox
-}
-
-.Dela-gothic-one-stable {
-  font-family: 'Dela Gothic One';
-}
-
-.Dela-gothic-one-text {
-  font-family: 'Dela Gothic One';
-  letter-spacing: 0.05em;
-  width: 80vw; // 基本寬度使用vw單位
-  margin: 0 auto; // 水平居中
-  line-height: 1; // 確保行高適中
-  max-height: calc(1.3em * 2); // 最多顯示兩行
-  font-size: 5vw; // 大螢幕字體大小
-  text-align: center;
-
-  // 中等屏幕
-  @media (max-width: $breakpoint-md-max) {
-    font-size: 6vw; // 平板上適當放大
-    width: 85vw;
-  }
-
-  // 小屏幕
-  @media (max-width: $breakpoint-sm-max) {
-    font-size: 7vw; // 手機上更大字體
-    width: 90vw;
-    letter-spacing: 0.03em; // 稍微減少字間距以適應小屏幕
-  }
-
-  // 極小屏幕
-  @media (max-width: 400px) {
-    font-size: 8vw;
-    letter-spacing: 0.02em;
-  }
-
-  // 確保內容不超過兩行
-  display: -webkit-box;
-  -webkit-line-clamp: 2; // 限制最多兩行
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.page-container {
-  position: relative;
-  width: 100%;
-  height: auto !important;
-  overflow: hidden !important;
-  min-height: 100vh;
-  overflow-x: hidden;
-  display: block !important;
-
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-.q-page-container {
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-.brain-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* 移除藍色背景 */
-  background-color: transparent;
-}
-
-.brain-img {
-  width: 500px;
-  height: auto;
-  display: block;
-
-  @media (max-width: $breakpoint-sm-max) {
-    width: 300px;
-  }
-}
-
-.note-wrapper {
-  position: absolute;
-  right: 180px;
-  bottom: 180px;
-  z-index: 1;
-}
-
-.peel-sticker {
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-}
+@import 'src/css/quasar.variables.scss';
 
 .return-to-preface-btn {
   position: fixed;
@@ -546,376 +429,75 @@ onBeforeUnmount(() => {
   }
 }
 
-.floating-cards-container {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  pointer-events: none;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  @media (max-width: $breakpoint-md-max) {
-    width: 160px;  /* 減小平板的容器尺寸 */
-    height: 160px;
-  }
-
-  @media (max-width: $breakpoint-sm-max) {
-    width: 120px;  /* 進一步減小手機的容器尺寸 */
-    height: 120px;
-  }
-}
-
-.floating-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  pointer-events: auto;
-}
-
-.card-wrapper {
-  position: relative;
-  left: -75px;
-  top: -75px;
-
-  @media (max-width: $breakpoint-sm-max) {
-    left: -50px; /* 減小手機版的偏移 */
-    top: -50px;
-  }
-}
-
-.my-card, .sticker-card {
-  width: 150px;
-  height: 150px;
-  transition: transform 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:hover {
-    transform: scale(1.08);
-  }
-
-  @media (max-width: $breakpoint-md-max) {
-    width: 100px;  /* 減小平板的卡片尺寸 */
-    height: 100px;
-  }
-
-  @media (max-width: $breakpoint-sm-max) {
-    width: 80px;  /* 進一步減小手機的卡片尺寸 */
-    height: 80px;
-  }
-}
-
-.card1, .card2, .card3 {
-  animation: rotate 20s linear infinite;
-}
-
-.card1 { animation-delay: 0s; }
-.card2 { animation-delay: -6.67s; }
-.card3 { animation-delay: -13.33s; }
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg) translateX(160px) translateY(-50px) rotate(0deg); /* 減小半徑並上移軌跡 */
-  }
-  to {
-    transform: rotate(360deg) translateX(160px) translateY(-50px) rotate(-360deg);
-  }
-}
-
-/* 為不同屏幕尺寸設置不同的旋轉軌跡 */
-@media (max-width: $breakpoint-md-max) {
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg) translateX(120px) translateY(-40px) rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg) translateX(120px) translateY(-40px) rotate(-360deg);
-    }
-  }
-}
-
-@media (max-width: $breakpoint-sm-max) {
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg) translateX(90px) translateY(-30px) rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg) translateX(90px) translateY(-30px) rotate(-360deg);
-    }
-  }
-}
-
-.dark {
-  .my-card {
-    background: rgba(30, 30, 30, 0.9);
-  }
-}
-
-.eyes-container {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  z-index: 10;
-  pointer-events: none;
-
-  @media (max-width: $breakpoint-md-max) {
-    gap: 45px;
-    top: 180px;
-  }
-
-  @media (max-width: $breakpoint-sm-max) {
-    gap: 30px;
-    top: 150px;
-  }
-}
-
-.left-eye, .right-eye {
-  pointer-events: none;
-}
-
-.brain-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: auto;
-
-  &:hover {
-    transform: scale(1.02);
-  }
-}
-
-.pupil {
-  transform-origin: center !important;
-}
-
-.bulletin-container {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 300px;
-  z-index: 100;
-}
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-background);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.3s ease;
-
-  h1 {
-    margin-bottom: 20px;
-  }
-}
-
-.content-wrapper {
+.gradient-bg {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 60%,
+    #2a2a2a 100%,
+  );
+  height: 100%;
   width: 100%;
+}
+
+/* Hero section 樣式 */
+.hero-content {
   position: relative;
-  transition: opacity 0.5s ease;
-  opacity: 0;
-}
-
-.content-loaded {
-  opacity: 1;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* 垂直導航列樣式 */
-.vertical-nav {
-  position: fixed;
-  left: 20px;
-  top: 70px;
-  transform: none;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 15px 10px;
-  border-radius: 10px;
-  z-index: 100;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.95);
-  }
-
-  .nav-links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .q-btn {
-      font-size: 0.9rem;
-      font-weight: 400;
-      position: relative;
-      padding: 0 8px;
-      min-height: 2rem;
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 0;
-        height: 2px;
-        background-color: currentColor;
-        transition: width 0.3s ease;
-      }
-
-      &:hover::after {
-        width: 100%;
-      }
-
-      &.active-nav {
-        color: var(--q-primary);
-        font-weight: 500;
-
-        &::after {
-          width: 100%;
-        }
-      }
-    }
-  }
-}
-
-/* 深色模式樣式 */
-.dark .vertical-nav {
-  background: rgba(40, 40, 40, 0.8);
-  border: 1px solid rgba(80, 80, 80, 0.2);
-
-  &:hover {
-    background: rgba(50, 50, 50, 0.9);
-  }
-
-  .nav-links .q-btn.active-nav {
-    color: var(--q-primary);
-  }
-}
-
-/* 確保每個 section 緊密排列 */
-.section {
-  width: 100%;
-  height: 100vh; /* 固定為視窗高度 */
-  padding: 0 8vw; /* 左右留白 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  overflow: hidden; /* 防止內容溢出 */
-}
-
-/* 每個 section 的內容容器 */
-.section-content {
-  width: 100%;
-  max-width: 1400px; /* 限制最大寬度 */
-  margin: 0 auto;
-  padding: 60px 0; /* 上下間距 */
-}
-
-/* 不同區塊的樣式 */
-.brain-wrapper,
-.guide-content,
-.news-content,
-.team-content,
-.contact-content {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* 默認為手機布局 */
 }
 
-/* Locomotive Scroll 特定樣式 */
-[data-scroll-container] {
+/* 文字部分 */
+.hero-text {
   position: relative;
+  z-index: 2;
+  padding: 2rem;
+  margin-top: 10vh; /* 手機版在上方 */
   width: 100%;
-  height: auto;
-  overflow: hidden !important;
+  text-align: left; /* 確保內容左對齊 */
 }
 
-[data-scroll-section] {
+/* 腦部分 */
+.brain-wrapper {
   position: relative;
-  width: 100%;
+  z-index: 3;
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: 10vh;
 }
 
-/* 取消動畫效果，確保立即可見 */
-[data-scroll] {
-  will-change: transform;
-  transition: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-}
-
-/* 響應式調整 */
-@media (max-width: 768px) {
-  .section {
-    padding: 0 4vw; /* 在小屏幕上減少左右間距 */
-  }
-
-  .vertical-nav {
-    left: 10px;
-    top: 60px;
-    padding: 10px 8px;
-
-    .nav-links .q-btn {
-      font-size: 0.8rem;
-      min-height: 1.8rem;
-    }
-  }
-}
-
-// 腦容器樣式
 .brain-container {
   position: relative;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-bottom: 20px;
 
   &:hover {
     transform: scale(1.02);
   }
 }
 
-// 變色腦樣式
+.brain-img {
+  max-width: 100%;
+  height: auto;
+  transition: opacity 0.3s ease;
+}
+
 .color-brain {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
-  transition: opacity 0.3s ease;
 }
 
-// 原始腦樣式
 .original-brain {
   position: relative;
   z-index: 1;
-  transition: opacity 0.3s ease;
 }
 
-// 腦標題樣式
 .brain-title {
   position: absolute;
   top: -80px;
@@ -923,70 +505,894 @@ onBeforeUnmount(() => {
   transform: translateX(-50%);
   z-index: 3;
   text-align: center;
-  animation: fadeIn 0.5s ease;
+  transition: opacity 0.3s ease;
 }
 
-// 大標題
 .brain-main-title {
   color: #ff44aa;
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   text-shadow: 0 0 10px rgba(255, 68, 170, 0.5);
-
-  @media (max-width: $breakpoint-sm-max) {
-    font-size: 1.8rem;
-  }
 }
 
-// 小標題
-.brain-sub-title {
-  color: #9966ff;
-  font-size: 1.2rem;
-
-  @media (max-width: $breakpoint-sm-max) {
-    font-size: 1rem;
-  }
+.brain-status-title {
+  text-align: center;
+  margin-top: 1rem;
 }
 
-// 淡入動畫
+.Dela-gothic-one-text {
+  font-family: 'Dela Gothic One', cursive;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+/* 淡入動畫 */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-// 功能卡片容器樣式 - 沒有動畫
-.function-cards-container {
+.disappear{
+  opacity:0;
+  transition: opacity 2s;
+  color: #333;
+}
+.appear{
+  opacity:1;
+}
+
+// /* 導航列 */
+// .vertical-nav {
+//   position: fixed;
+//   top: 50%;
+//   right: 30px;
+//   transform: translateY(-50%);
+//   z-index: 100;
+//   background: rgba(0, 0, 0, 0.3);
+//   backdrop-filter: blur(10px);
+//   padding: 15px 10px;
+//   border-radius: 30px;
+// }
+
+// .nav-links {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+// }
+
+// .nav-btn {
+//   color: #fff;
+//   opacity: 0.6;
+//   transition: opacity 0.3s;
+
+//   &:hover {
+//     opacity: 1;
+//   }
+
+//   &.active {
+//     opacity: 1;
+//     color: #FDC65D;
+//   }
+// }
+.brain-status-question {
+  position: absolute;
+  bottom: 6vh;
+  right: 5vw;
+  width: 40%;
+  height: auto;
+  z-index: 10;
+  pointer-events: none;
+
+  svg {
+    overflow: visible;
+  }
+
+  @media (min-width: 769px) {
+    width: 30%;
+    bottom: 10vh;
+    right: 10vw;
+  }
+
+  @media (max-width: 768px) {
+    width: 60%;
+    bottom: 15vh;
+    right: 5vw;
+
+    text {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 70%;
+    bottom: 12vh;
+
+    text {
+      font-size: 16px;
+    }
+  }
+}
+/* 每個 section 固定高度為 100vh */
+.section {
+  height: 100vh;
+  width: 100%;
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin: 2rem 0;
+  overflow: hidden;
 }
 
-.function-card {
-  width: 200px;
+/* 內容容器 */
+.section-inner {
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 標題樣式 */
+.huge-title {
+  font-family: 'Nova Round', cursive !important;
+  letter-spacing: 1px; /* 改善字體顯示 */
+}
+
+/* 統一的區塊標題樣式 */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+  position: relative;
+
+  @media (min-width: 769px) {
+    margin-bottom: 5rem;
+  }
+}
+
+.section-number {
+  font-size: 3rem;
+  line-height: 1;
+  position: absolute;
+  top: -1.5rem;
+  left: -1rem;
+  z-index: 0;
+
+  @media (min-width: 769px) {
+    font-size: 5rem;
+    top: -2.5rem;
+    left: -2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2.5rem;
+    top: -1rem;
+    left: -0.5rem;
+  }
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 2.5rem;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: 769px) {
+    font-size: 3.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+
+  .primary-color {
+    color: $primary;
+  }
+}
+
+.primary-color {
+  color: $primary;
+}
+.grey {
+  color: #999;
+}
+
+/* 波浪背景樣式 */
+.wave-background {
+  position: absolute;
+  top: 70vh;  /* 位於第一個區塊底部 */
+  left: -5%;
+  width: 110vw;
+  height: 30vh;
+  z-index: 1;
+  pointer-events: none;  /* 確保不會干擾滑鼠事件 */
+}
+
+.wave-svg {
+  width: 100%;
+  height: auto;
+  opacity: 0.6;  /* 半透明效果 */
+}
+
+/* 確保第二個區塊內容在波浪之上 */
+.content-section {
+  position: relative;
+  z-index: 2;
+}
+
+/* 第二區塊 */
+.content-section {
+  position: relative;
+}
+
+.sign-in {
+  max-width: 600px;
+}
+
+.content-desc {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form input {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 2rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: $primary;
+}
+
+.form button {
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  border: none;
+  background: $primary;
+  color: #FFF;
+  font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+/* Team section */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+}
+
+.team-member {
+  color: #fff;
+}
+
+.member-name {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+}
+
+.member-role {
+  color: #FDC65D;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.member-desc {
+  color: #999;
+  line-height: 1.6;
+}
+
+/* Contact section */
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  color: #fff;
+  font-size: 1.8rem;
+}
+
+.contact-item .q-icon {
+  color: #FDC65D;
+  font-size: 2.5rem;
+}
+
+/* 公告板樣式 */
+.expanded-bulletin {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  border-radius: 4px;
+  padding: 2rem;
+  height: 50vh;
+  overflow-y: auto;
+}
+
+/* 右上角漂浮的大腦 */
+.floating-brain-wrapper {
+  position: absolute;
+  top: 10vh;
+  right: 5vw;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* 漂浮動畫 */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
   }
-
-  @media (max-width: $breakpoint-sm-max) {
-    width: 140px;
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* 手機版調整 */
+@media (max-width: 768px) {
+  .floating-brain-wrapper {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 10vh;
+    align-self: center;
   }
-  to {
-    opacity: 1;
+}
+
+/* 響應式設計 */
+@media (min-width: 769px) {
+  .hero-content {
+    flex-direction: row;
+  }
+
+  .hero-text {
+    position: absolute;
+    bottom: 15vh;
+    left: 0;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  .brain-wrapper {
+    position: absolute;
+    top: 10vh;
+    right: 5vw;
+    margin: 0;
+  }
+}
+
+/* 平板布局 - 介於手機和桌面之間 */
+@media (min-width: 601px) and (max-width: 768px) {
+  .brainSize {
+    width: 250px; /* 平板版稍小一點 */
+  }
+
+  .huge-title {
+    font-size: 6vw;
+  }
+}
+
+/* 手機布局調整 */
+@media (max-width: 600px) {
+  .brainSize {
+    width: 200px; /* 手機版更小 */
+  }
+
+  .huge-title {
+    font-size: 12vw;
+  }
+
+  .brain-main-title {
+    font-size: 1.8rem;
+  }
+
+  .brain-status-title .Dela-gothic-one-text {
+    font-size: 1.2rem;
+  }
+}
+
+/* 確保標題文字有足夠的區域 */
+.hero-text {
+  .huge-title {
+    margin-bottom: 1rem;
+    width: 80%; /* 佔父元素的 80% */
+    transform-origin: left bottom; /* 從左下角開始放大縮小 */
+    position: relative;
+    left: 0;
+    bottom: 0;
+    line-height: 0.9;
+  }
+
+  .title-word {
+    font-size: 10vw; /* 使用視窗寬度作為基礎，確保足夠大 */
+    display: block; /* 讓每個單詞獨占一行 */
+    width: 100%; /* 佔滿容器寬度 */
+    letter-spacing: -0.02em; /* 稍微調整字間距 */
+    text-align: left; /* 確保文字左對齊 */
+  }
+
+  .knotty-word {
+    padding-left: 0; /* 第一行從最左邊開始 */
+    margin-left: 0;
+  }
+
+  .brained-word {
+    padding-left: 3vw; /* 第二行保持縮進效果 */
+  }
+
+  /* 不同斷點也使用相同的起點和大小比例 */
+  @media (max-width: 768px) {
+    .huge-title {
+      width: 80%; /* 保持相同的寬度比例 */
+      transform-origin: left bottom; /* 保持相同的起點 */
+    }
+
+    .title-word {
+      font-size: 15vw; /* 在小屏幕上使用更大的字體 */
+    }
+
+    .knotty-word {
+      padding-left: 0; /* 小屏幕移除縮進 */
+    }
+
+    .brained-word {
+      padding-left: 1.5rem; /* 小屏幕減少縮進 */
+    }
+  }
+}
+
+/* 確保 Loading 遮罩樣式正確 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 99999; /* 極高的 z-index 確保顯示在最前面 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-text-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.loading-text-line {
+  white-space: nowrap;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.2);
+  left: -150px;
+
+  @media (max-width: 599px) {
+    font-size: 7vw; /* 手機版稍小一些 */
+  }
+
+  @media (min-width: 600px) and (max-width: 1023px) {
+    font-size: 10vw; /* 平板大小 */
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 10vw; /* 桌面版超大 */
+  }
+}
+
+/* 你也可以添加一些動畫效果，讓大字體更有視覺衝擊 */
+.loading-text-line span {
+  display: inline-block;
+  transform-origin: center;
+  animation: pulseText 2s infinite; /* 脈動效果 */
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.02); }
+}
+
+/* 重要：將 scoped 移除，讓樣式可以生效到 html.is-ready 元素 */
+@import 'src/css/quasar.variables.scss';
+
+/* 保留 locomotive-parallax.scss 中的核心旋轉樣式，直接寫在這裡 */
+.c-header_title_line {
+  display: block;
+  opacity: 0;
+  transform: translateY(100%) rotateX(-80deg);
+  transform-origin: left bottom;
+  transform-style: preserve-3d;
+  transition: opacity 0s cubic-bezier(.215,.61,.355,1), transform 0s cubic-bezier(.215,.61,.355,1);
+  text-align: left; /* 確保文字左對齊 */
+  padding-left: 0; /* 移除可能的左邊距 */
+  margin-left: 0;
+
+  &:first-child {
+    margin-left: 0; /* 確保第一行從最左邊開始 */
+    padding-left: 0;
+  }
+
+  span {
+    display: inline-block;
+    transform-origin: left bottom;
+    transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    font-family: 'Nova Round', cursive !important;
+  }
+}
+
+/* 頁面就緒時的標題行動畫 */
+html.is-ready .c-header_title_line {
+  opacity: 1;
+  transform: none;
+  transition-duration: .8s;
+}
+
+html.is-ready .c-header_title_line:first-child {
+  transition-delay: .1s;
+}
+
+html.is-ready .c-header_title_line:nth-child(2) {
+  transition-delay: .2s;
+}
+
+/* 視差標題樣式 */
+.c-header_title {
+  padding: 2.5rem 0;
+  perspective: 600px;
+  -webkit-perspective: 600px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  width: 80%;
+  transform-origin: left bottom;
+}
+
+/* 移動設備下的標題對齊左下角 */
+@media (max-width: 768px) {
+  .hero-text {
+    margin-top: 0;
+    position: absolute;
+    bottom: 15vh;
+    left: 5vw;
+    text-align: left;
+    width: 90%;
+  }
+
+  .c-header_title {
+    position: relative;
+    bottom: auto;
+    width: 100%;
+    text-align: left;
+    padding-bottom: 0;
+  }
+
+  .title-word {
+    font-size: 14vw;
+  }
+
+  .knotty-word, .brained-word {
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* 更小螢幕的額外調整 */
+@media (max-width: 480px) {
+  .hero-text {
+    bottom: 12vh;
+  }
+
+  .title-word {
+    font-size: 16vw;
+  }
+}
+
+/* 確保第二區的特殊佈局 */
+.content-section .section-inner {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 769px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+
+    @media (min-width: 769px) {
+      flex: 0 0 40%;
+      margin-bottom: 0;
+    }
+  }
+
+  .sign-in {
+    @media (min-width: 769px) {
+      margin-top: 4rem;
+    }
+  }
+}
+
+/* 功能球容器樣式 */
+.function-balls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4rem;
+  margin: 4rem 0;
+  position: relative;
+  height: 50vh; /* 足夠高的容器以顯示球向上漂浮 */
+
+  @media (max-width: 768px) {
+    gap: 3rem;
+    height: auto;
+    padding: 2rem 0;
+  }
+}
+
+.function-ball-wrapper {
+  position: relative;
+  z-index: 2;
+  /* 浮動動畫 */
+  animation: floatAnimation 6s ease-in-out infinite;
+
+  &:nth-child(2) {
+    animation-delay: 1s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 2s;
+  }
+}
+
+/* 球的基本樣式 */
+.function-ball {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.5s ease;
+  perspective: 1000px;
+
+  /* 不同尺寸的球 */
+  &.ball-large {
+    width: 260px;
+    height: 260px;
+
+    @media (max-width: 768px) {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  &.ball-medium {
+    width: 220px;
+    height: 220px;
+
+    @media (max-width: 768px) {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  /* 默認狀態下半透明 */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.9;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+  }
+
+  /* 懸停效果 */
+  &:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+
+    &::before {
+      opacity: 1;
+    }
+
+    .ball-content {
+      transform: rotateY(180deg);
+    }
+  }
+
+  /* 點擊效果 */
+  &:active {
+    transform: scale(0.95);
+  }
+
+  /* 球內容 - 3D翻轉效果 */
+  .ball-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .ball-front, .ball-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    color: white;
+  }
+
+  .ball-back {
+    transform: rotateY(180deg);
+  }
+
+  .problem-title, .ball-title {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.4rem;
+    }
+  }
+
+  .problem-desc, .ball-desc {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    line-height: 1.4;
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* 球的顏色變化 */
+.ball-1::before {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+}
+
+.ball-2::before {
+  background: linear-gradient(135deg, #6A11CB, #2575FC);
+}
+
+.ball-3::before {
+  background: linear-gradient(135deg, #00C9FF, #92FE9D);
+}
+
+/* 浮動動畫 */
+@keyframes floatAnimation {
+  0%, 100% {
     transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* 球內的發光效果 */
+.function-ball::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 頁腳大腦容器 */
+.footer-brain-container {
+  width: 100%;
+  padding: 5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 40vh;
+
+  /* 為容器添加特殊背景效果 */
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.2));
+}
+
+/* 底部大腦樣式 */
+.footer-brain-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  /* 為大腦添加輕微的上下浮動效果 */
+  animation: footer-brain-float 6s ease-in-out infinite;
+
+  /* 大腦周圍的光暈效果 */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+  }
+
+  /* 當滑鼠懸停在大腦上時的效果 */
+  &:hover {
+    animation-play-state: paused;
+    transform: scale(1.05);
+
+    &::before {
+      animation: footer-pulse 2.5s infinite;
+    }
+  }
+}
+
+/* 頁腳大腦浮動動畫 */
+@keyframes footer-brain-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* 頁腳光暈脈衝動畫 */
+@keyframes footer-pulse {
+  0% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.95);
   }
 }
 </style>

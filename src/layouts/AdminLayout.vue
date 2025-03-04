@@ -117,5 +117,10 @@ const navs = computed(() => {
     padding-left: 0;
   }
 }
+
+/* 只對管理面板標題使用 Nova Round 字體 */
+.q-toolbar__title {
+  font-family: 'Nova Round', cursive !important;
+}
 </style>
 

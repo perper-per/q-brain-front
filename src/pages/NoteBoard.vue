@@ -429,12 +429,31 @@ const updateViewMode = () => {
   min-height: unset !important;
 }
 
+/* 添加背景圖片 */
 .board-page {
   height: 100%;
   width: 100%;
   overflow: hidden;
   padding: 0;
   display: flex;
+  position: relative;
+}
+
+/* 添加背景圖片容器 */
+.board-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('@/assets/holographic-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none; /* 確保點擊事件穿透到底層元素 */
 }
 
 .board-container {
@@ -442,12 +461,14 @@ const updateViewMode = () => {
   flex: 1;
   width: 100%;
   overflow: hidden;
+  position: relative;
+  z-index: 1; /* 確保內容在背景之上 */
 }
 
 .left-column {
   width: fit-content;
   min-width: 120px;
-  background-color: #333333;
+  background-color: rgba(255, 255, 255, 0.3);
   border-right: 1px solid #ddd;
   padding: 20px;
   display: flex;
@@ -456,7 +477,7 @@ const updateViewMode = () => {
   height: 100%;
   overflow: hidden;
   gap: 20px;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+
 }
 
 .add-btn-container {
@@ -502,7 +523,7 @@ const updateViewMode = () => {
 
 .protected-area {
   padding: 8px;
-  background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+  background-color: rgba(255, 255, 255, 0.3); /* 半透明背景 */
   backdrop-filter: blur(4px);
   border-bottom: 1px solid #eee;
   min-height: 40px;
@@ -510,7 +531,6 @@ const updateViewMode = () => {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: #333;
 }
 
 .error {

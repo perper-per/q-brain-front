@@ -12,19 +12,24 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary   : #217C52;
-$secondary : #26A69A;
-$accent    : #9C27B0;
+$primary   : #4046FC;
+$secondary : #D0D765;
+$accent    : #6C65D7;
 
 $dark      : #1D1D1D;
 $dark-page : #121212;
 
-$positive  : #21BA45;
-$negative  : #C10015;
-$info      : #31CCEC;
-$warning   : #F2C037;
+$positive  : #e39eb8;
+$negative  : #4b4446;
+$info      : #948fe4;
+$warning   : #29217d;
 
 // 添加自定義變量
-$primary-dark: #0F5735;
+$primary-dark: #285e46;
 $text-light: #000;
-$text-dark: #9fa;
+$text-dark: #fff;
+
+// 添加字體變數
+$font-body: 'Noto Sans TC', sans-serif;
+$font-title: 'Nova Round';
+$font-title-2: 'Dela Gothic One';

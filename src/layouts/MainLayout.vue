@@ -5,17 +5,12 @@
       <q-toolbar class="header-toolbar">
         <!-- 左側標題/LOGO -->
         <q-toolbar-title @click="goHome" class="cursor-pointer">
-          <!-- 在小屏幕上隱藏完整標題 -->
-          <span v-if="!$q.screen.lt.sm">{{ $t('nav.title') }}</span>
-          <!-- 在小屏幕上顯示縮寫標題或LOGO -->
-          <span v-else class="text-h6">
-            {{ $t('nav.shortTitle') || $t('nav.title').substring(0, 3) }}
-          </span>
+          <span>{{ $t('nav.title') }}</span>
         </q-toolbar-title>
 
         <q-space />
 
-        <!-- 桌面版導航選項 (在手機版中隱藏) -->
+        <!-- 桌面版導航 (手機版中隱藏) -->
         <div v-if="!$q.screen.lt.md" class="desktop-nav">
           <template v-if="!user.isLoggedIn">
             <q-btn
@@ -70,7 +65,7 @@
             </q-btn>
           </template>
 
-          <!-- 語言選擇器 - 桌面版 -->
+          <!-- 語言 -->
           <q-btn-dropdown flat icon="translate">
             <q-list>
               <q-item
@@ -270,7 +265,7 @@ const user = useUserStore()
 const $q = useQuasar()
 const { destroyLocomotiveScroll } = useLocomotiveScroll()
 
-let locomotiveInstance = null
+const locomotiveInstance = null
 
 const displayName = computed(() => user.username?.toLowerCase())
 const colors = ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]
@@ -374,13 +369,11 @@ onBeforeUnmount(() => {
   destroyLocomotiveScroll()
 })
 
-// 返回前言页面
 const goToPreface = () => {
   router.push('/')
   rightDrawerOpen.value = false
 }
 
-// 切換右側抽屜（修復版本）
 const toggleRightDrawer = () => {
   console.log('選單按鈕點擊，目前抽屜狀態:', rightDrawerOpen.value)
   // 直接切換狀態
@@ -479,6 +472,9 @@ body.body--dark {
 .header-toolbar {
   min-height: 50px;
   padding: 0 12px;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
 
   /* 移動端標題調整 */
   .q-toolbar__title {
@@ -639,5 +635,10 @@ body.body--dark {
     rgba(var(--color-primary-rgb), 0),
     rgba(var(--color-primary-rgb), 0.1),
     rgba(var(--color-primary-rgb), 0));
+}
+
+/* 只對網站標題使用 Nova Round 字體 */
+.q-toolbar__title {
+  font-family: 'Nova Round', cursive !important;
 }
 </style>
