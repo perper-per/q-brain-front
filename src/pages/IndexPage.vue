@@ -62,14 +62,14 @@
               <!-- 變色版腦 (條件渲染) -->
               <img
                 v-if="showColorBrain"
-                src="../assets/brain_rgb_gra.png"
+                src="/img/brain_rgb_gra.png"
                 class="brain-img color-brain"
                 :style="{ width: `${brainSizes[currentSize]}px` }"
               >
 
               <!-- 原始腦圖片 -->
               <img
-                src="../assets/brain_rgb_onlybrain.png"
+                src="@/assets/brain_rgb_onlybrain.png"
                 class="brain-img original-brain"
                 :style="{ width: `${brainSizes[currentSize]}px`, opacity: showColorBrain ? 0 : 1 }"
                 @load="handleImageLoad"
