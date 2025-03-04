@@ -31,10 +31,19 @@ const routes = [
           },
         },
       },
-      { path: 'notes', component: () => import('pages/NoteBoard.vue') },
-      { path: 'breathe', component: () => import('pages/BreathePage.vue') },
+      {
+        path: 'notes',
+        name: 'notes',
+        component: () => import('pages/NoteBoard.vue'),
+      },
+      {
+        path: 'breathe',
+        name: 'breathe',
+        component: () => import('pages/BreathePage.vue'),
+      },
       {
         path: 'login',
+        name: 'login',
         component: () => import('pages/LoginPage.vue'),
         meta: { title: 'nav.login' },
       },
@@ -49,6 +58,7 @@ const routes = [
       },
       {
         path: 'dashboard',
+        name: 'dashboard',
         component: () => import('pages/DashBoard.vue'),
         meta: {
           requiresAuth: true,
@@ -116,6 +126,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
+    name: 'notFound',
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ]

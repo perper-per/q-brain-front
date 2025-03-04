@@ -3,7 +3,7 @@
     <!-- <HalftoneWaves class="background-waves" /> -->
     <!-- Loading 遮罩 -->
     <div v-if="isLoading" class="loading-overlay">
-      <h1 style="font-family: 'Dela Gothic One', cursive;">>>>>>>>>>>>>loading>>>>>>>>>>>>>>>>>>>>>>></h1>
+      <h1 style="font-family: 'Dela Gothic One', cursive;">>>>>>>>>>>>>loading>>>>>>>>>>>>>></h1>
       <q-spinner-dots color="primary" size="40px" />
     </div>
 

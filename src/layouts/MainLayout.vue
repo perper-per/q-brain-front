@@ -21,7 +21,7 @@
             <q-btn
               flat
               :label="$t('nav.login')"
-              :to="{ name: 'login' }"
+              :to="'/site/login'"
             />
           </template>
           <template v-else>
