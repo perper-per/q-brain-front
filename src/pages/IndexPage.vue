@@ -62,7 +62,7 @@
               <!-- 變色版腦 (條件渲染) -->
               <img
                 v-if="showColorBrain"
-                src="/img/brain_rgb_gra.png"
+                src="@/assets/brain_rgb_gra.png"
                 class="brain-img color-brain"
                 :style="{ width: `${brainSizes[currentSize]}px` }"
               >
