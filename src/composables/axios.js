@@ -10,7 +10,7 @@ import axios from 'axios'
 
 // 創建基礎 API 實例
 const api = axios.create({
-  baseURL: process.env.API_URL || 'http://localhost:4000',
+  baseURL: process.env.API_URL,
   withCredentials: true,
 })
 

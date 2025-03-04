@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // 設置 API 基本 URL
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API || 'http://localhost:4000',
+  baseURL: import.meta.env.API_URL,
   withCredentials: true,
 })
 

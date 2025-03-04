@@ -395,8 +395,8 @@ const toggleRightDrawer = () => {
 }
 </script>
 
-<style lang="scss">
-/* 使用更具體的選擇器來提高優先級 */
+<style lang="scss" scoped>
+
 body .q-layout .q-page-container {
   padding-top: 0px !important;
   min-height: calc(100vh - 50px);
