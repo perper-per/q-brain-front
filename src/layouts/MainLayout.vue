@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lff">
+  <q-layout>
     <!-- 桌面版和手機版通用的頂部導航欄 - 使用全局主題變量 -->
     <q-header class="main-header header-z-index fixed-header" bordered>
       <q-toolbar class="header-toolbar">
