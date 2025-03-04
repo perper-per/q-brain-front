@@ -49,7 +49,7 @@ export default defineConfig((/* ctx */) => {
       // analyze: true,
 
       env: {
-        API_URL: process.env.API_URL || 'http://localhost:4000',
+        API_URL: process.env.API_URL,
         OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
       },
 

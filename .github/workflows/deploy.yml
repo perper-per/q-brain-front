@@ -29,6 +29,9 @@ jobs:
 
     - name: Build the app
       run: npx quasar build
+      env:
+          # 藏前端的 env
+          API_URL: ${{ secrets.API_URL }}
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
