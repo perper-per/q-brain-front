@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # 當推送到 main 分支時觸發部署
+      - main
 
 jobs:
   deploy:
@@ -34,4 +34,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist/spa  # 指定要推送的資料夾，通常是 dist/spa
+        publish_dir: ./dist/spa
