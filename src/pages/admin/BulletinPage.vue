@@ -75,6 +75,29 @@
             >
               <q-tooltip>{{ $t('admin.bulletin.editBulletin') }}</q-tooltip>
             </q-btn>
+
+            <!-- 添加發布/草稿切換按鈕 -->
+            <q-btn
+              v-if="props.row.status === 'draft'"
+              flat
+              round
+              color="positive"
+              icon="publish"
+              @click="changeStatus(props.row, 'published')"
+            >
+              <q-tooltip>{{ $t('admin.bulletin.publish') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="props.row.status === 'published'"
+              flat
+              round
+              color="grey"
+              icon="unpublished"
+              @click="changeStatus(props.row, 'draft')"
+            >
+              <q-tooltip>{{ $t('admin.bulletin.unpublish') }}</q-tooltip>
+            </q-btn>
+
             <q-btn
               flat
               round
@@ -105,6 +128,16 @@
               v-model="editingBulletin.type"
               :options="typeOptions"
               :label="$t('admin.bulletin.type')"
+              emit-value
+              map-options
+              class="q-mb-md"
+            />
+
+            <!-- 公告狀態 -->
+            <q-select
+              v-model="editingBulletin.status"
+              :options="statusOptions"
+              :label="$t('admin.bulletin.status')"
               emit-value
               map-options
               class="q-mb-md"
@@ -231,6 +264,18 @@ const typeOptions = [
   }
 ]
 
+// 狀態選項
+const statusOptions = [
+  {
+    label: t('admin.bulletin.statuses.draft'),
+    value: 'draft'
+  },
+  {
+    label: t('admin.bulletin.statuses.published'),
+    value: 'published'
+  }
+]
+
 // 狀態顏色映射
 const getStatusColor = (status) => {
   const colors = {
@@ -336,9 +381,20 @@ onMounted(() => {
 // 打開編輯器
 const openEditor = (bulletin = null) => {
   if (bulletin) {
+    // 確保日期格式正確
+    const formattedPublishDate = bulletin.publishDate ?
+      date.formatDate(bulletin.publishDate, 'YYYY-MM-DD') :
+      '';
+
+    const formattedExpiryDate = bulletin.expiryDate ?
+      date.formatDate(bulletin.expiryDate, 'YYYY-MM-DD') :
+      '';
+
     editingBulletin.value = {
       ...bulletin,
-      _id: bulletin._id || bulletin.id
+      _id: bulletin._id || bulletin.id,
+      publishDate: formattedPublishDate,
+      expiryDate: formattedExpiryDate
     }
   } else {
     editingBulletin.value = {
@@ -350,16 +406,31 @@ const openEditor = (bulletin = null) => {
     }
   }
   showEditor.value = true
+  console.log('原始公告：', bulletin)
 }
 
 // 儲存公告
 const saveBulletin = async () => {
   try {
+    // 創建要發送的數據物件
+    const bulletinData = { ...editingBulletin.value };
+
+    // 確保日期格式正確
+    if (bulletinData.publishDate) {
+      // 確保日期格式在儲存時是正確的
+      // 視您的後端需求，可能需要轉換成 ISO 格式或其他格式
+      bulletinData.publishDate = date.formatDate(bulletinData.publishDate, 'YYYY-MM-DD');
+    }
+
+    if (bulletinData.expiryDate) {
+      bulletinData.expiryDate = date.formatDate(bulletinData.expiryDate, 'YYYY-MM-DD');
+    }
+
     if (editingBulletin.value.id || editingBulletin.value._id) {
       const bulletinId = editingBulletin.value._id || editingBulletin.value.id
-      await apiAuth.patch(`/api/bulletins/${bulletinId}`, editingBulletin.value)
+      await apiAuth.patch(`/api/bulletins/${bulletinId}`, bulletinData)
     } else {
-      await apiAuth.post('/api/bulletins', editingBulletin.value)
+      await apiAuth.post('/api/bulletins', bulletinData)
     }
     showEditor.value = false
     await onRequest({
@@ -398,5 +469,35 @@ const confirmDelete = (bulletin) => {
       })
     }
   })
+}
+
+// 更改公告狀態
+const changeStatus = async (bulletin, newStatus) => {
+  try {
+    const bulletinId = bulletin._id || bulletin.id
+    await apiAuth.patch(`/api/bulletins/${bulletinId}`, {
+      status: newStatus
+    })
+
+    $q.notify({
+      type: 'positive',
+      message: newStatus === 'published'
+        ? t('admin.bulletin.publishSuccess')
+        : t('admin.bulletin.unpublishSuccess'),
+      position: 'top'
+    })
+
+    // 重新載入公告列表
+    await onRequest({
+      pagination: pagination.value
+    })
+  } catch (error) {
+    console.error('Error changing bulletin status:', error)
+    $q.notify({
+      type: 'negative',
+      message: error.response?.data?.message || '狀態更新失敗',
+      position: 'top'
+    })
+  }
 }
 </script>

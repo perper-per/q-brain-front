@@ -1,5 +1,5 @@
 <template>
-  <q-page class="login-page">
+  <q-page class="login-page column no-wrap" style="padding: 0;">
     <SlideForm />
   </q-page>
 </template>
@@ -14,10 +14,21 @@ import SlideForm from 'components/SlideForm.vue'
   width: 100%;
   background: var(--login-bg);
   color: var(--login-text);
+  padding: 0 !important;
+  margin: 0 !important;
 
+  // 確保頁面從頂部開始，沒有任何空間
+  display: flex;
+  flex-direction: column;
+
+  // 移除 Quasar 默認邊距
+  &.q-page {
+    padding-top: 0;
+  }
 
   :deep(.container) {
     min-height: 100vh;
+    margin-top: 0;
   }
 
   :deep(.q-card) {

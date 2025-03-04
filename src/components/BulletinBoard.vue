@@ -1,7 +1,7 @@
 <template>
   <q-card class="bulletin-board">
     <q-card-section>
-      <div class="text-h6">最新公告</div>
+      <div class="text-h6">最新資訊</div>
     </q-card-section>
 
     <q-card-section>

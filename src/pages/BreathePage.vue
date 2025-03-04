@@ -3,6 +3,14 @@
     <!-- 添加 HalftoneWaves 作為背景 -->
     <HalftoneWaves class="background-waves" />
 
+    <!-- 完成覆蓋層 -->
+    <div v-if="showCompletionOverlay" class="completion-overlay" @click="dismissOverlay">
+      <div class="completion-circle" @click.stop>
+        <span class="completion-text">舒適</span>
+      </div>
+      <div class="completion-hint">點擊空白處關閉</div>
+    </div>
+
     <!-- 主要內容區域 -->
     <div class="content-container">
       <!-- 桌面版控制面板布局 -->
@@ -181,6 +189,7 @@ const currentPhase = ref('吸')
 const duration = ref(60) // 預設 1 分鐘
 let breathInterval
 let timerInterval
+const showCompletionOverlay = ref(false)
 
 // 當 duration 改變時，更新 timeLeft
 watch(duration, (newValue) => {
@@ -209,6 +218,7 @@ const toggleBreathing = () => {
 const startBreathing = () => {
   isStarted.value = true
   timeLeft.value = duration.value // 設置計時時間
+  showCompletionOverlay.value = false // 確保覆蓋層隱藏
 
   // 開始呼吸動畫循環
   breathInterval = setInterval(() => {
@@ -221,8 +231,9 @@ const startBreathing = () => {
     if (timeLeft.value > 0) {
       timeLeft.value--
     } else {
-      // 時間到，停止練習
+      // 時間到，停止練習並顯示完成覆蓋層
       stopBreathing()
+      showCompletionOverlay.value = true
     }
   }, 1000)
 }
@@ -242,6 +253,11 @@ const stopBreathing = () => {
     clearInterval(timerInterval)
     timerInterval = null
   }
+}
+
+// 解除完成覆蓋層
+const dismissOverlay = () => {
+  showCompletionOverlay.value = false
 }
 
 // 組件卸載前清理計時器
@@ -605,6 +621,64 @@ onBeforeUnmount(() => {
   .mobile-bottom-controls .control-btn {
     font-size: 1.1rem;
     padding: 8px 30px;
+  }
+}
+
+/* 完成覆蓋層樣式 */
+.completion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.5s ease;
+}
+
+.completion-circle {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 70%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+  animation: pulseGlow 2s infinite alternate ease-in-out;
+  cursor: default;
+}
+
+.completion-text {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #444;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.completion-hint {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    transform: scale(1);
+  }
+  to {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
   }
 }
 </style>

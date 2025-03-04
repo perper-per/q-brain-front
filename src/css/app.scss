@@ -9,26 +9,27 @@ $header-height-mobile: 48px;
 // 隱藏全局滾動軸但保持滾動功能
 html,
 body {
+  font-family: 'Noto Sans TC', sans-serif;
+  margin: 0;
+  padding: 0;
   scroll-behavior: smooth;
-  overflow-y: auto !important; // 確保可以滾動
-  height: auto !important; // 允許內容延伸
-  min-height: 100vh;
+  overflow: auto !important; // 始終允許滾動
   
   &::-webkit-scrollbar {
-    display: none !important; // Chrome, Safari, Edge
+    display: none !important;
   }
-  -ms-overflow-style: none !important;  // IE
-  scrollbar-width: none !important;  // Firefox
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
-// 確保所有容器可以滾動但隱藏原生滾動軸
+// 確保所有容器可以滾動
 .q-layout,
 .q-page-container,
 .q-page,
 .page-container {
   height: auto !important;
   min-height: 100vh;
-  overflow-y: auto !important; // 確保可以滾動
+  overflow-y: auto !important; // 強制允許滾動
   
   &::-webkit-scrollbar {
     display: none !important;
@@ -235,9 +236,9 @@ body {
   }
 }
 
-// 添加 Locomotive Scroll 相關樣式
+// 移除 Locomotive Scroll 的覆蓋
 .has-scroll-smooth {
-  overflow: hidden;
+  overflow: auto !important; // 強制覆蓋 Locomotive 的設置
 }
 
 .has-scroll-dragging {
@@ -297,4 +298,22 @@ body {
 
 .dark .c-scrollbar_thumb {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+// 關鍵添加: 正確的 Locomotive Scroll 樣式
+.is-inview {
+  transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1),
+              transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+// 視差元素基本樣式
+[data-scroll] {
+  will-change: transform;
+  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+// 視差容器
+[data-scroll-container] {
+  overflow: auto !important;
+  height: auto !important;
 }
