@@ -1,6 +1,6 @@
 <template>
-  <div data-scroll-container >
-  <!-- <div data-scroll-container class="gradient-bg"> -->
+  <!-- <div data-scroll-container > -->
+  <div data-scroll-container class="gradient-bg">
     <!-- Loading 遮罩 - 使用 v-show 而非 v-if 確保元素存在 -->
     <div v-show="isLoading" class="loading-overlay">
       <div class="loading-text-container">
@@ -50,11 +50,11 @@
         </div>
 
           <div class="brain-status-question" data-scroll-speed="-6" >
-            <svg width="449" height="157" viewBox="0 0 549 157" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="600" height="157" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g transform="rotate(30 275 78.5)">
                 <path id="path1" d="M9.55568 33.819C105.754 212.873 467.187 -29.5023 542.273 101.507" stroke="transparent" stroke-width="5"/>
 
-                <text fill="blue" font-size="50" font-family="'Dela Gothic One', cursive" textLength="500" lengthAdjust="spacing">
+                <text fill="#4046FC" font-size="60" font-family="'Dela Gothic One', cursive" textLength="500" lengthAdjust="spacing">
                   <textPath href="#path1">
                     腦的狀態如何？
                   </textPath>
@@ -307,7 +307,18 @@ const teamMembers = [
 
 
 // 點擊大腦重定向到登錄頁面
-const redirectToLogin = () => router.push('/site/login')
+const redirectToLogin = () => {
+  // 檢查用戶是否已登入 (通常是檢查 localStorage 或其他身份驗證狀態)
+  const isLoggedIn = localStorage.getItem('userToken') || false
+
+  if (isLoggedIn) {
+    // 已登入，跳轉到儀表板
+    router.push('/site/dashboard')
+  } else {
+    // 未登入，跳轉到登錄頁面
+    router.push('/site/login')
+  }
+}
 const goToNoteBoard = () => router.push('/site/notes')
 const goToPreface = () => router.push('/')
 const goToBreathePage = () => router.push('/site/breathe')
@@ -582,15 +593,19 @@ onMounted(() => {
   height: auto;
   z-index: 10;
   pointer-events: none;
+  animation: brain-question-float 6s ease-in-out infinite;
 
   svg {
     overflow: visible;
   }
 
   @media (min-width: 769px) {
-    width: 30%;
+    width: 40%;
     bottom: 10vh;
     right: 10vw;
+    text {
+      font-size: 70px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -599,7 +614,7 @@ onMounted(() => {
     right: 5vw;
 
     text {
-      font-size: 18px;
+      font-size: 60px;
     }
   }
 
@@ -608,10 +623,21 @@ onMounted(() => {
     bottom: 12vh;
 
     text {
-      font-size: 16px;
+      font-size: 50px;
     }
   }
 }
+
+/* 添加問題文字的浮動動畫 */
+@keyframes brain-question-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
 /* 每個 section 固定高度為 100vh */
 .section {
   height: 100vh;
