@@ -306,8 +306,19 @@ const teamMembers = [
 ]
 
 
-// 點擊大腦重定向到登錄頁面
-const redirectToLogin = () => router.push('/site/login')
+// 點擊大腦重定向到登錄頁面或儀表板
+const redirectToLogin = () => {
+  // 檢查用戶是否已登入 (通常是檢查 localStorage 或其他身份驗證狀態)
+  const isLoggedIn = localStorage.getItem('userToken') || false
+
+  if (isLoggedIn) {
+    // 已登入，跳轉到儀表板
+    router.push('/site/dashboard')
+  } else {
+    // 未登入，跳轉到登錄頁面
+    router.push('/site/login')
+  }
+}
 const goToNoteBoard = () => router.push('/site/notes')
 const goToPreface = () => router.push('/')
 const goToBreathePage = () => router.push('/site/breathe')
